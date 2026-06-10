@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TV Infoblack - Canales en Vivo</title>
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --sidebar-bg: #16161d;
+      --card-bg: #1e1e28;
+      --accent: #e63946;
+      --accent2: #457b9d;
+      --text: #f1f1f1;
+      --text-muted: #888;
+      --border: #2a2a38;
+      --hover: #2a2a3a;
+      --badge-sport: #e63946;
+      --badge-news: #2196f3;
+      --badge-ent: #9c27b0;
+      --badge-gen: #4caf50;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      height: 56px;
+      background: var(--sidebar-bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .logo svg { width: 28px; height: 28px; }
+
+    .live-badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .search-wrap {
+      display: flex;
+      align-items: center;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 12px;
+      gap: 8px;
+      width: 260px;
+    }
+
+    .search-wrap svg { color: var(--text-muted); flex-shrink: 0; }
+
+    #searchInput {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 0.9rem;
+      width: 100%;
+      padding: 8px 0;
+    }
+
+    #searchInput::placeholder { color: var(--text-muted); }
+
+    /* LAYOUT */
+    .layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* SIDEBAR */
+    aside {
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .category-tabs {
+      display: flex;
+      flex-direction: column;
+      padding: 12px 8px;
+      gap: 2px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .cat-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s;
+    }
+
+    .cat-btn:hover { background: var(--hover); color: var(--text); }
+    .cat-btn.active { background: var(--accent); color: #fff; }
+
+    .cat-btn .cat-icon { font-size: 1.1rem; width: 20px; text-align: center; }
+    .cat-count {
+      margin-left: auto;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 1px 7px;
+      font-size: 0.75rem;
+    }
+    .cat-btn.active .cat-count { background: rgba(255,255,255,0.25); }
+
+    /* MAIN */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* PLAYER */
+    .player-area {
+      background: #000;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .player-area iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .player-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 16px;
+      color: var(--text-muted);
+    }
+
+    .player-placeholder svg { opacity: 0.3; }
+    .player-placeholder p { font-size: 1rem; }
+    .player-placeholder span { font-size: 0.8rem; }
+
+    .player-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: var(--sidebar-bg);
+      border-bottom: 1px solid var(--border);
+      min-height: 44px;
+    }
+
+    .channel-name-display {
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .player-controls { display: flex; gap: 8px; }
+
+    .ctrl-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background 0.15s;
+    }
+
+    .ctrl-btn:hover { background: var(--hover); }
+    .ctrl-btn.primary { background: var(--accent); border-color: var(--accent); }
+    .ctrl-btn.primary:hover { background: #c0303b; }
+
+    /* CHANNEL GRID */
+    .channels-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .channels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .channel-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+      position: relative;
+    }
+
+    .channel-card:hover {
+      border-color: var(--accent);
+      background: var(--hover);
+      transform: translateY(-2px);
+    }
+
+    .channel-card.active {
+      border-color: var(--accent);
+      background: rgba(230, 57, 70, 0.12);
+    }
+
+    .channel-card.active::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 10px 10px 0 0;
+    }
+
+    .ch-emoji { font-size: 1.8rem; line-height: 1; }
+
+    .ch-name {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .ch-badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-sport { background: rgba(230,57,70,0.2); color: #e63946; }
+    .badge-news  { background: rgba(33,150,243,0.2); color: #64b5f6; }
+    .badge-ent   { background: rgba(156,39,176,0.2); color: #ce93d8; }
+    .badge-gen   { background: rgba(76,175,80,0.2); color: #81c784; }
+
+    .live-dot {
+      width: 7px; height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      gap: 12px;
+    }
+
+    .empty-state svg { opacity: 0.3; }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #444; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      aside { width: 200px; }
+      .search-wrap { width: 180px; }
+      .channels-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+    }
+
+    @media (max-width: 560px) {
+      aside { display: none; }
+      .search-wrap { width: 140px; }
+    }
+
+    /* RESIZE HANDLE */
+    .resize-handle {
+      height: 5px;
+      background: var(--border);
+      cursor: ns-resize;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .resize-handle:hover { background: var(--accent); }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 10H3V8h18v8zM6 15l5-3-5-3v6z"/>
+    </svg>
+    TV Infoblack
+  </a>
+  <span class="live-badge">EN VIVO</span>
+  <div class="search-wrap">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input type="text" id="searchInput" placeholder="Buscar canal..." />
+  </div>
+</header>
+
+<div class="layout">
+
+  <aside>
+    <div class="category-tabs" id="categoryTabs">
+      <button class="cat-btn active" data-cat="all">
+        <span class="cat-icon">📺</span> Todos
+        <span class="cat-count" id="count-all">0</span>
+      </button>
+      <button class="cat-btn" data-cat="sport">
+        <span class="cat-icon">⚽</span> Deportes
+        <span class="cat-count" id="count-sport">0</span>
+      </button>
+      <button class="cat-btn" data-cat="news">
+        <span class="cat-icon">📰</span> Noticias
+        <span class="cat-count" id="count-news">0</span>
+      </button>
+      <button class="cat-btn" data-cat="ent">
+        <span class="cat-icon">🎬</span> Entretenimiento
+        <span class="cat-count" id="count-ent">0</span>
+      </button>
+      <button class="cat-btn" data-cat="gen">
+        <span class="cat-icon">📡</span> General
+        <span class="cat-count" id="count-gen">0</span>
+      </button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="player-area" id="playerArea" style="height: 360px;">
+      <div class="player-placeholder" id="playerPlaceholder">
+        <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+          <rect x="2" y="7" width="20" height="15" rx="2"/>
+          <path d="M17 2 12 7 7 2"/>
+        </svg>
+        <p>Selecciona un canal para ver en vivo</p>
+        <span>80+ canales disponibles</span>
+      </div>
+      <iframe id="playerFrame" src="" style="display:none;" allowfullscreen
+        allow="autoplay; fullscreen; encrypted-media"></iframe>
+    </div>
+
+    <div class="resize-handle" id="resizeHandle"></div>
+
+    <div class="player-info">
+      <div class="channel-name-display">
+        <span class="live-dot" id="liveDot" style="display:none;"></span>
+        <span id="currentChannelName">Ningún canal seleccionado</span>
+      </div>
+      <div class="player-controls">
+        <button class="ctrl-btn" id="btnPrev" onclick="prevChannel()">&#9664; Anterior</button>
+        <button class="ctrl-btn" id="btnNext" onclick="nextChannel()">Siguiente &#9654;</button>
+        <button class="ctrl-btn primary" id="btnFullscreen" onclick="toggleFullscreen()">⛶ Pantalla completa</button>
+      </div>
+    </div>
+
+    <div class="channels-area" id="channelsArea">
+      <div class="empty-state" id="emptyState">
+        <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <p>No se encontraron canales</p>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+const BASE = 'https://www.telegratishd.com';
+
+const channels = [
+  // DEPORTES
+  { id: 'espn',               name: 'ESPN',                  emoji: '🏟️', cat: 'sport', url: `${BASE}/espn-en-vivo.php` },
+  { id: 'espn2',              name: 'ESPN 2',                emoji: '🏟️', cat: 'sport', url: `${BASE}/espn-2-en-vivo.php` },
+  { id: 'espn3',              name: 'ESPN 3',                emoji: '🏟️', cat: 'sport', url: `${BASE}/espn-3-en-vivo.php` },
+  { id: 'fox-sports',         name: 'FOX Sports',            emoji: '🦊', cat: 'sport', url: `${BASE}/fox-sports-en-vivo.php` },
+  { id: 'fox-sports2',        name: 'FOX Sports 2',          emoji: '🦊', cat: 'sport', url: `${BASE}/fox-sports-2-en-vivo.php` },
+  { id: 'fox-sports3',        name: 'FOX Sports 3',          emoji: '🦊', cat: 'sport', url: `${BASE}/fox-sports-3-en-vivo.php` },
+  { id: 'fox-sports-premium', name: 'FOX Sports Premium',    emoji: '⭐', cat: 'sport', url: `${BASE}/fox-sports-premium-en-vivo.php` },
+  { id: 'dazn-f1',            name: 'DAZN F1',               emoji: '🏎️', cat: 'sport', url: `${BASE}/dazn-f1-en-vivo.php` },
+  { id: 'dazn-laliga',        name: 'DAZN LaLiga',           emoji: '⚽', cat: 'sport', url: `${BASE}/dazn-la-liga-en-vivo.php` },
+  { id: 'directv-sports',     name: 'DirecTV Sports',        emoji: '📡', cat: 'sport', url: `${BASE}/directv-sports-en-vivo.php` },
+  { id: 'directv-sports2',    name: 'DirecTV Sports 2',      emoji: '📡', cat: 'sport', url: `${BASE}/directv-sports-2-en-vivo.php` },
+  { id: 'tudn',               name: 'TUDN',                  emoji: '⚽', cat: 'sport', url: `${BASE}/tudn-en-vivo.php` },
+  { id: 'tyc-sports',         name: 'TyC Sports',            emoji: '🏆', cat: 'sport', url: `${BASE}/tyc-sports-en-vivo.php` },
+  { id: 'tnt-sports',         name: 'TNT Sports',            emoji: '💥', cat: 'sport', url: `${BASE}/tnt-sports-en-vivo.php` },
+  { id: 'liga1max',           name: 'Liga 1 MAX',            emoji: '🎽', cat: 'sport', url: `${BASE}/liga-1-max-en-vivo.php` },
+  { id: 'movistar-dep',       name: 'Movistar Deportes',     emoji: '📱', cat: 'sport', url: `${BASE}/movistar-deportes-en-vivo.php` },
+  { id: 'movistar-lcl',       name: 'Movistar Liga Camp.',   emoji: '🏆', cat: 'sport', url: `${BASE}/movistar-liga-de-campeones-en-vivo.php` },
+
+  // NOTICIAS
+  { id: 'cnn-espanol',  name: 'CNN en Español', emoji: '📺', cat: 'news', url: `${BASE}/cnn-en-espanol-en-vivo.php` },
+  { id: 'cnn-us',       name: 'CNN USA',        emoji: '🌎', cat: 'news', url: `${BASE}/cnn-en-vivo.php` },
+  { id: 'bbc-world',    name: 'BBC World',      emoji: '🇬🇧', cat: 'news', url: `${BASE}/bbc-world-en-vivo.php` },
+  { id: 'telemundo',    name: 'Telemundo',      emoji: '🌐', cat: 'news', url: `${BASE}/telemundo-en-vivo.php` },
+  { id: 'univision',    name: 'Univision',      emoji: '📡', cat: 'news', url: `${BASE}/univision-en-vivo.php` },
+  { id: 'antena3',      name: 'Antena 3',       emoji: '📡', cat: 'news', url: `${BASE}/antena-3-en-vivo.php` },
+  { id: 'caracol',      name: 'Caracol TV',     emoji: '🦋', cat: 'news', url: `${BASE}/caracol-tv-en-vivo.php` },
+  { id: 'rcn',          name: 'RCN',            emoji: '📻', cat: 'news', url: `${BASE}/rcn-en-vivo.php` },
+
+  // ENTRETENIMIENTO
+  { id: 'disney',       name: 'Disney Channel', emoji: '🏰', cat: 'ent', url: `${BASE}/disney-channel-en-vivo.php` },
+  { id: 'cartoon',      name: 'Cartoon Network',emoji: '🎨', cat: 'ent', url: `${BASE}/cartoon-network-en-vivo.php` },
+  { id: 'tooncast',     name: 'Tooncast',       emoji: '🎭', cat: 'ent', url: `${BASE}/tooncast-en-vivo.php` },
+  { id: 'discovery',    name: 'Discovery',      emoji: '🔭', cat: 'ent', url: `${BASE}/discovery-channel-en-vivo.php` },
+  { id: 'history',      name: 'History',        emoji: '🏛️', cat: 'ent', url: `${BASE}/history-channel-en-vivo.php` },
+  { id: 'animal-planet',name: 'Animal Planet',  emoji: '🐘', cat: 'ent', url: `${BASE}/animal-planet-en-vivo.php` },
+  { id: 'nat-geo',      name: 'Nat Geo',        emoji: '🌍', cat: 'ent', url: `${BASE}/national-geographic-en-vivo.php` },
+  { id: 'tnt',          name: 'TNT',            emoji: '💥', cat: 'ent', url: `${BASE}/tnt-en-vivo.php` },
+  { id: 'star',         name: 'Star Channel',   emoji: '⭐', cat: 'ent', url: `${BASE}/star-channel-en-vivo.php` },
+  { id: 'cinemax',      name: 'Cinemax',        emoji: '🎬', cat: 'ent', url: `${BASE}/cinemax-en-vivo.php` },
+  { id: 'space',        name: 'Space',          emoji: '🚀', cat: 'ent', url: `${BASE}/space-en-vivo.php` },
+  { id: 'syfy',         name: 'Syfy',           emoji: '👾', cat: 'ent', url: `${BASE}/syfy-en-vivo.php` },
+  { id: 'warner',       name: 'Warner Channel', emoji: '🎥', cat: 'ent', url: `${BASE}/warner-channel-en-vivo.php` },
+  { id: 'fx',           name: 'FX',             emoji: '🎞️', cat: 'ent', url: `${BASE}/fx-en-vivo.php` },
+  { id: 'axn',          name: 'AXN',            emoji: '🔥', cat: 'ent', url: `${BASE}/axn-en-vivo.php` },
+  { id: 'amc',          name: 'AMC',            emoji: '🎭', cat: 'ent', url: `${BASE}/amc-en-vivo.php` },
+  { id: 'sony',         name: 'Sony Channel',   emoji: '📺', cat: 'ent', url: `${BASE}/sony-channel-en-vivo.php` },
+
+  // GENERAL
+  { id: 'telefe',       name: 'Telefe',         emoji: '📺', cat: 'gen', url: `${BASE}/telefe-en-vivo.php` },
+  { id: 'el-trece',     name: 'El Trece',       emoji: '3️⃣',  cat: 'gen', url: `${BASE}/el-trece-en-vivo.php` },
+  { id: 'latina',       name: 'Latina TV',      emoji: '🌅', cat: 'gen', url: `${BASE}/latina-en-vivo.php` },
+  { id: 'america-tv',   name: 'América TV',     emoji: '🌎', cat: 'gen', url: `${BASE}/america-tv-en-vivo.php` },
+  { id: 'atv',          name: 'ATV',            emoji: '📡', cat: 'gen', url: `${BASE}/atv-en-vivo.php` },
+  { id: 'imagen-tv',    name: 'Imagen TV',      emoji: '🖼️', cat: 'gen', url: `${BASE}/imagen-tv-en-vivo.php` },
+  { id: 'azteca7',      name: 'Azteca 7',       emoji: '🦅', cat: 'gen', url: `${BASE}/azteca-7-en-vivo.php` },
+  { id: 'azteca-uno',   name: 'Azteca Uno',     emoji: '🦅', cat: 'gen', url: `${BASE}/azteca-uno-en-vivo.php` },
+  { id: 'canal5',       name: 'Canal 5',        emoji: '5️⃣',  cat: 'gen', url: `${BASE}/canal-5-en-vivo.php` },
+];
+
+let currentIndex = -1;
+let activeCategory = 'all';
+let searchTerm = '';
+
+const badgeClass = { sport: 'badge-sport', news: 'badge-news', ent: 'badge-ent', gen: 'badge-gen' };
+const catLabel   = { sport: 'Deporte', news: 'Noticias', ent: 'Entretenimiento', gen: 'General' };
+
+function getFiltered() {
+  return channels.filter(ch => {
+    const matchCat  = activeCategory === 'all' || ch.cat === activeCategory;
+    const matchSearch = ch.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchCat && matchSearch;
+  });
+}
+
+function updateCounts() {
+  document.getElementById('count-all').textContent   = channels.length;
+  document.getElementById('count-sport').textContent = channels.filter(c => c.cat === 'sport').length;
+  document.getElementById('count-news').textContent  = channels.filter(c => c.cat === 'news').length;
+  document.getElementById('count-ent').textContent   = channels.filter(c => c.cat === 'ent').length;
+  document.getElementById('count-gen').textContent   = channels.filter(c => c.cat === 'gen').length;
+}
+
+function renderChannels() {
+  const area = document.getElementById('channelsArea');
+  const empty = document.getElementById('emptyState');
+  const filtered = getFiltered();
+
+  // Remove old grids
+  area.querySelectorAll('.section-title, .channels-grid').forEach(el => el.remove());
+
+  if (filtered.length === 0) {
+    empty.style.display = 'flex';
+    return;
+  }
+  empty.style.display = 'none';
+
+  if (activeCategory === 'all' && !searchTerm) {
+    const groups = {
+      sport: { label: 'Deportes', items: [] },
+      news:  { label: 'Noticias', items: [] },
+      ent:   { label: 'Entretenimiento', items: [] },
+      gen:   { label: 'General', items: [] },
+    };
+    filtered.forEach(ch => groups[ch.cat].items.push(ch));
+    Object.values(groups).forEach(g => {
+      if (!g.items.length) return;
+      const title = document.createElement('div');
+      title.className = 'section-title';
+      title.textContent = g.label;
+      area.appendChild(title);
+      area.appendChild(buildGrid(g.items));
+    });
+  } else {
+    area.appendChild(buildGrid(filtered));
+  }
+}
+
+function buildGrid(list) {
+  const grid = document.createElement('div');
+  grid.className = 'channels-grid';
+  list.forEach(ch => {
+    const card = document.createElement('div');
+    card.className = 'channel-card' + (channels.indexOf(ch) === currentIndex ? ' active' : '');
+    card.dataset.idx = channels.indexOf(ch);
+    card.innerHTML = `
+      <span class="ch-emoji">${ch.emoji}</span>
+      <span class="ch-name">${ch.name}</span>
+      <span class="ch-badge ${badgeClass[ch.cat]}">${catLabel[ch.cat]}</span>
+    `;
+    card.addEventListener('click', () => selectChannel(channels.indexOf(ch)));
+    grid.appendChild(card);
+  });
+  return grid;
+}
+
+function selectChannel(idx) {
+  currentIndex = idx;
+  const ch = channels[idx];
+
+  document.getElementById('playerPlaceholder').style.display = 'none';
+  const frame = document.getElementById('playerFrame');
+  frame.style.display = 'block';
+  frame.src = ch.url;
+
+  document.getElementById('currentChannelName').textContent = ch.name;
+  document.getElementById('liveDot').style.display = 'inline-block';
+
+  document.querySelectorAll('.channel-card').forEach(card => {
+    card.classList.toggle('active', parseInt(card.dataset.idx) === idx);
+  });
+
+  // Scroll card into view
+  const activeCard = document.querySelector('.channel-card.active');
+  if (activeCard) activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function prevChannel() {
+  const filtered = getFiltered();
+  if (!filtered.length) return;
+  const cur = filtered.findIndex(c => channels.indexOf(c) === currentIndex);
+  const prev = cur <= 0 ? filtered.length - 1 : cur - 1;
+  selectChannel(channels.indexOf(filtered[prev]));
+}
+
+function nextChannel() {
+  const filtered = getFiltered();
+  if (!filtered.length) return;
+  const cur = filtered.findIndex(c => channels.indexOf(c) === currentIndex);
+  const next = cur >= filtered.length - 1 ? 0 : cur + 1;
+  selectChannel(channels.indexOf(filtered[next]));
+}
+
+function toggleFullscreen() {
+  const area = document.getElementById('playerArea');
+  if (!document.fullscreenElement) {
+    area.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+// Category tabs
+document.getElementById('categoryTabs').addEventListener('click', e => {
+  const btn = e.target.closest('.cat-btn');
+  if (!btn) return;
+  activeCategory = btn.dataset.cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b === btn));
+  renderChannels();
+});
+
+// Search
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchTerm = e.target.value;
+  renderChannels();
+});
+
+// Resize player
+const handle = document.getElementById('resizeHandle');
+let resizing = false, startY = 0, startH = 0;
+handle.addEventListener('mousedown', e => {
+  resizing = true;
+  startY = e.clientY;
+  startH = document.getElementById('playerArea').offsetHeight;
+  document.body.style.userSelect = 'none';
+});
+document.addEventListener('mousemove', e => {
+  if (!resizing) return;
+  const newH = Math.max(180, Math.min(startH + (e.clientY - startY), window.innerHeight - 200));
+  document.getElementById('playerArea').style.height = newH + 'px';
+});
+document.addEventListener('mouseup', () => {
+  resizing = false;
+  document.body.style.userSelect = '';
+});
+
+// Init
+updateCounts();
+renderChannels();
+</script>
+</body>
+</html>
