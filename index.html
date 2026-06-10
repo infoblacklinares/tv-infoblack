@@ -205,15 +205,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 
 <!-- CATEGORÍAS -->
 <div class="cats" id="cats">
-  <button class="cat-btn active" data-list="sports">⚽ Deportes</button>
-  <button class="cat-btn" data-list="spa">🌎 Latino</button>
-  <button class="cat-btn" data-list="news">📰 Noticias</button>
+  <button class="cat-btn active" data-list="cl">🇨🇱 Chile</button>
+  <button class="cat-btn" data-list="animation">🎌 Anime</button>
+  <button class="cat-btn" data-list="sports">🏆 Deportes / WWE</button>
   <button class="cat-btn" data-list="movies">🎬 Películas</button>
+  <button class="cat-btn" data-list="news">📰 Noticias</button>
   <button class="cat-btn" data-list="music">🎵 Música</button>
-  <button class="cat-btn" data-list="mx">🇲🇽 México</button>
+  <button class="cat-btn" data-list="kids">👶 Infantil</button>
+  <button class="cat-btn" data-list="spa">🌎 Latino</button>
   <button class="cat-btn" data-list="ar">🇦🇷 Argentina</button>
-  <button class="cat-btn" data-list="co">🇨🇴 Colombia</button>
-  <button class="cat-btn" data-list="pe">🇵🇪 Perú</button>
+  <button class="cat-btn" data-list="mx">🇲🇽 México</button>
   <button class="cat-btn" data-list="us">🇺🇸 USA</button>
 </div>
 
@@ -272,7 +273,7 @@ let allChannels = [];
 let currentList = [];
 let currentIdx  = -1;
 let hlsInst     = null;
-let currentCat  = 'sports';
+let currentCat  = 'cl';
 let searchTimer = null;
 let deferredPrompt = null;
 
@@ -538,7 +539,7 @@ function showToast(msg) {
 }
 
 /* ══ INIT ══ */
-loadChannels('sports');
+loadChannels('cl');
 </script>
 </body>
 </html>

@@ -3,16 +3,19 @@ const http  = require('http');
 
 // Listas de iptv-org actualizadas diariamente
 const LISTS = {
-  sports:  'https://iptv-org.github.io/iptv/categories/sports.m3u',
-  spa:     'https://iptv-org.github.io/iptv/languages/spa.m3u',
-  mx:      'https://iptv-org.github.io/iptv/countries/mx.m3u',
-  ar:      'https://iptv-org.github.io/iptv/countries/ar.m3u',
-  co:      'https://iptv-org.github.io/iptv/countries/co.m3u',
-  pe:      'https://iptv-org.github.io/iptv/countries/pe.m3u',
-  us:      'https://iptv-org.github.io/iptv/countries/us.m3u',
-  news:    'https://iptv-org.github.io/iptv/categories/news.m3u',
-  movies:  'https://iptv-org.github.io/iptv/categories/movies.m3u',
-  music:   'https://iptv-org.github.io/iptv/categories/music.m3u',
+  cl:        'https://iptv-org.github.io/iptv/countries/cl.m3u',
+  sports:    'https://iptv-org.github.io/iptv/categories/sports.m3u',
+  animation: 'https://iptv-org.github.io/iptv/categories/animation.m3u',
+  spa:       'https://iptv-org.github.io/iptv/languages/spa.m3u',
+  mx:        'https://iptv-org.github.io/iptv/countries/mx.m3u',
+  ar:        'https://iptv-org.github.io/iptv/countries/ar.m3u',
+  co:        'https://iptv-org.github.io/iptv/countries/co.m3u',
+  pe:        'https://iptv-org.github.io/iptv/countries/pe.m3u',
+  us:        'https://iptv-org.github.io/iptv/countries/us.m3u',
+  news:      'https://iptv-org.github.io/iptv/categories/news.m3u',
+  movies:    'https://iptv-org.github.io/iptv/categories/movies.m3u',
+  music:     'https://iptv-org.github.io/iptv/categories/music.m3u',
+  kids:      'https://iptv-org.github.io/iptv/categories/kids.m3u',
 };
 
 function fetch(url) {
