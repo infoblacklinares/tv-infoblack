@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TV Infoblack - Canales en Vivo</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
     :root {
       --bg: #0f0f13;
@@ -19,6 +20,7 @@
       --badge-news: #2196f3;
       --badge-ent: #9c27b0;
       --badge-gen: #4caf50;
+      --badge-anime: #ff6b35;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -314,6 +316,7 @@
     .badge-news  { background: rgba(33,150,243,0.2); color: #64b5f6; }
     .badge-ent   { background: rgba(156,39,176,0.2); color: #ce93d8; }
     .badge-gen   { background: rgba(76,175,80,0.2); color: #81c784; }
+    .badge-anime { background: rgba(255,107,53,0.2); color: #ff6b35; }
 
     .live-dot {
       width: 7px; height: 7px;
@@ -407,6 +410,10 @@
         <span class="cat-icon">📡</span> General
         <span class="cat-count" id="count-gen">0</span>
       </button>
+      <button class="cat-btn" data-cat="anime">
+        <span class="cat-icon">🎌</span> Anime
+        <span class="cat-count" id="count-anime">0</span>
+      </button>
     </div>
   </aside>
 
@@ -422,6 +429,8 @@
       </div>
       <iframe id="playerFrame" src="" style="display:none;" allowfullscreen
         allow="autoplay; fullscreen; encrypted-media"></iframe>
+      <video id="playerHLS" style="display:none; width:100%; height:100%; background:#000;"
+        controls autoplay playsinline></video>
     </div>
 
     <div class="resize-handle" id="resizeHandle"></div>
@@ -502,6 +511,17 @@ const channels = [
   { id: 'amc',          name: 'AMC',            emoji: '🎭', cat: 'ent', url: `${BASE}/amc-en-vivo.php` },
   { id: 'sony',         name: 'Sony Channel',   emoji: '📺', cat: 'ent', url: `${BASE}/sony-channel-en-vivo.php` },
 
+  // ANIME (streams m3u8 verificados - Samsung TV Plus vía iptv-org)
+  { id: 'naruto',       name: 'Naruto 24/7',      emoji: '🍥', cat: 'anime', url: 'https://d21vn5eki5qsdi.cloudfront.net/playlist.m3u8',    type: 'm3u8' },
+  { id: 'filmrise',     name: 'FilmRise Anime',   emoji: '🎌', cat: 'anime', url: 'https://dvu7aia8rjlfm.cloudfront.net/master.m3u8',        type: 'm3u8' },
+  { id: 'retrocrush',   name: 'RetroCrush',       emoji: '📼', cat: 'anime', url: 'https://d2nqmwm1ndpgi2.cloudfront.net/playlist.m3u8',     type: 'm3u8' },
+  { id: 'itsanime',     name: "It's Anime",        emoji: '✨', cat: 'anime', url: 'https://d1isoijd9dbbf7.cloudfront.net/playlist.m3u8',     type: 'm3u8' },
+  { id: 'hunterxhunter',name: 'Hunter x Hunter',  emoji: '🕷️', cat: 'anime', url: 'https://d190au8yjmla79.cloudfront.net/playlist.m3u8',     type: 'm3u8' },
+  { id: 'jojo',         name: "JoJo's Bizarre",   emoji: '💎', cat: 'anime', url: 'https://d2kqaqstkr42e1.cloudfront.net/playlist.m3u8',     type: 'm3u8' },
+  { id: 'animehidive',  name: 'ANIME x HIDIVE',   emoji: '🌟', cat: 'anime', url: 'https://d3f088nnrrvkwf.cloudfront.net/v1/amc_anime_x_hidive_1/samsungheadend_us/latest/main/hls/playlist.m3u8', type: 'm3u8' },
+  { id: 'kartoon',      name: 'Kartoon Channel',  emoji: '🎠', cat: 'anime', url: 'https://d2z0ysa6dgxhlc.cloudfront.net/kchan.m3u8',        type: 'm3u8' },
+  { id: 'ygo',          name: 'Yu-Gi-Oh!',        emoji: '🃏', cat: 'anime', url: 'https://amg01796-amg01796c19-rakuten-gb-7486.playouts.now.amagi.tv/playlist/amg01796-fastmediafast-yugioh2en-rakutengb/playlist.m3u8', type: 'm3u8' },
+
   // GENERAL
   { id: 'telefe',       name: 'Telefe',         emoji: '📺', cat: 'gen', url: `${BASE}/telefe-en-vivo.php` },
   { id: 'el-trece',     name: 'El Trece',       emoji: '3️⃣',  cat: 'gen', url: `${BASE}/el-trece-en-vivo.php` },
@@ -518,8 +538,9 @@ let currentIndex = -1;
 let activeCategory = 'all';
 let searchTerm = '';
 
-const badgeClass = { sport: 'badge-sport', news: 'badge-news', ent: 'badge-ent', gen: 'badge-gen' };
-const catLabel   = { sport: 'Deporte', news: 'Noticias', ent: 'Entretenimiento', gen: 'General' };
+const badgeClass = { sport: 'badge-sport', news: 'badge-news', ent: 'badge-ent', gen: 'badge-gen', anime: 'badge-anime' };
+const catLabel   = { sport: 'Deporte', news: 'Noticias', ent: 'Entretenimiento', gen: 'General', anime: 'Anime' };
+let hlsInstance = null;
 
 function getFiltered() {
   return channels.filter(ch => {
@@ -535,6 +556,7 @@ function updateCounts() {
   document.getElementById('count-news').textContent  = channels.filter(c => c.cat === 'news').length;
   document.getElementById('count-ent').textContent   = channels.filter(c => c.cat === 'ent').length;
   document.getElementById('count-gen').textContent   = channels.filter(c => c.cat === 'gen').length;
+  document.getElementById('count-anime').textContent = channels.filter(c => c.cat === 'anime').length;
 }
 
 function renderChannels() {
@@ -557,6 +579,7 @@ function renderChannels() {
       news:  { label: 'Noticias', items: [] },
       ent:   { label: 'Entretenimiento', items: [] },
       gen:   { label: 'General', items: [] },
+      anime: { label: '🎌 Anime (streams verificados)', items: [] },
     };
     filtered.forEach(ch => groups[ch.cat].items.push(ch));
     Object.values(groups).forEach(g => {
@@ -596,8 +619,32 @@ function selectChannel(idx) {
 
   document.getElementById('playerPlaceholder').style.display = 'none';
   const frame = document.getElementById('playerFrame');
-  frame.style.display = 'block';
-  frame.src = ch.url;
+  const videoEl = document.getElementById('playerHLS');
+
+  // Destroy previous HLS instance
+  if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
+
+  if (ch.type === 'm3u8') {
+    // HLS stream
+    frame.style.display = 'none';
+    frame.src = '';
+    videoEl.style.display = 'block';
+    if (Hls.isSupported()) {
+      hlsInstance = new Hls({ enableWorker: true, lowLatencyMode: true });
+      hlsInstance.loadSource(ch.url);
+      hlsInstance.attachMedia(videoEl);
+      hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => videoEl.play().catch(()=>{}));
+    } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+      videoEl.src = ch.url;
+      videoEl.play().catch(()=>{});
+    }
+  } else {
+    // iframe embed
+    videoEl.style.display = 'none';
+    videoEl.src = '';
+    frame.style.display = 'block';
+    frame.src = ch.url;
+  }
 
   document.getElementById('currentChannelName').textContent = ch.name;
   document.getElementById('liveDot').style.display = 'inline-block';
