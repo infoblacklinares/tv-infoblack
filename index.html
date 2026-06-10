@@ -312,11 +312,10 @@
       letter-spacing: 0.5px;
     }
 
-    .badge-sport { background: rgba(230,57,70,0.2); color: #e63946; }
-    .badge-news  { background: rgba(33,150,243,0.2); color: #64b5f6; }
-    .badge-ent   { background: rgba(156,39,176,0.2); color: #ce93d8; }
-    .badge-gen   { background: rgba(76,175,80,0.2); color: #81c784; }
-    .badge-anime { background: rgba(255,107,53,0.2); color: #ff6b35; }
+    .badge-sport  { background: rgba(230,57,70,0.2);   color: #e63946; }
+    .badge-action { background: rgba(255,152,0,0.2);   color: #ffb74d; }
+    .badge-know   { background: rgba(76,175,80,0.2);   color: #81c784; }
+    .badge-news   { background: rgba(33,150,243,0.2);  color: #64b5f6; }
 
     .live-dot {
       width: 7px; height: 7px;
@@ -398,21 +397,17 @@
         <span class="cat-icon">⚽</span> Deportes
         <span class="cat-count" id="count-sport">0</span>
       </button>
+      <button class="cat-btn" data-cat="action">
+        <span class="cat-icon">🔥</span> Acción / Cine
+        <span class="cat-count" id="count-action">0</span>
+      </button>
+      <button class="cat-btn" data-cat="know">
+        <span class="cat-icon">🧠</span> Historia / Ciencia
+        <span class="cat-count" id="count-know">0</span>
+      </button>
       <button class="cat-btn" data-cat="news">
         <span class="cat-icon">📰</span> Noticias
         <span class="cat-count" id="count-news">0</span>
-      </button>
-      <button class="cat-btn" data-cat="ent">
-        <span class="cat-icon">🎬</span> Entretenimiento
-        <span class="cat-count" id="count-ent">0</span>
-      </button>
-      <button class="cat-btn" data-cat="gen">
-        <span class="cat-icon">📡</span> General
-        <span class="cat-count" id="count-gen">0</span>
-      </button>
-      <button class="cat-btn" data-cat="anime">
-        <span class="cat-icon">🎌</span> Anime
-        <span class="cat-count" id="count-anime">0</span>
       </button>
     </div>
   </aside>
@@ -425,7 +420,7 @@
           <path d="M17 2 12 7 7 2"/>
         </svg>
         <p>Selecciona un canal para ver en vivo</p>
-        <span>80+ canales disponibles</span>
+        <span>Los mejores canales para hombres 💪</span>
       </div>
       <iframe id="playerFrame" src="" style="display:none;" allowfullscreen
         allow="autoplay; fullscreen; encrypted-media"></iframe>
@@ -460,86 +455,76 @@
 </div>
 
 <script>
-const BASE = 'https://www.telegratishd.com';
+const BASE  = 'https://www.telegratishd.com';
+const SPORT = 'https://tododeportes.xyz/canal/?name=';
 
 const channels = [
-  // DEPORTES
-  { id: 'espn',               name: 'ESPN',                  emoji: '🏟️', cat: 'sport', url: `${BASE}/espn-en-vivo.php` },
-  { id: 'espn2',              name: 'ESPN 2',                emoji: '🏟️', cat: 'sport', url: `${BASE}/espn-2-en-vivo.php` },
-  { id: 'espn3',              name: 'ESPN 3',                emoji: '🏟️', cat: 'sport', url: `${BASE}/espn-3-en-vivo.php` },
-  { id: 'fox-sports',         name: 'FOX Sports',            emoji: '🦊', cat: 'sport', url: `${BASE}/fox-sports-en-vivo.php` },
-  { id: 'fox-sports2',        name: 'FOX Sports 2',          emoji: '🦊', cat: 'sport', url: `${BASE}/fox-sports-2-en-vivo.php` },
-  { id: 'fox-sports3',        name: 'FOX Sports 3',          emoji: '🦊', cat: 'sport', url: `${BASE}/fox-sports-3-en-vivo.php` },
-  { id: 'fox-sports-premium', name: 'FOX Sports Premium',    emoji: '⭐', cat: 'sport', url: `${BASE}/fox-sports-premium-en-vivo.php` },
-  { id: 'dazn-f1',            name: 'DAZN F1',               emoji: '🏎️', cat: 'sport', url: `${BASE}/dazn-f1-en-vivo.php` },
-  { id: 'dazn-laliga',        name: 'DAZN LaLiga',           emoji: '⚽', cat: 'sport', url: `${BASE}/dazn-la-liga-en-vivo.php` },
-  { id: 'directv-sports',     name: 'DirecTV Sports',        emoji: '📡', cat: 'sport', url: `${BASE}/directv-sports-en-vivo.php` },
-  { id: 'directv-sports2',    name: 'DirecTV Sports 2',      emoji: '📡', cat: 'sport', url: `${BASE}/directv-sports-2-en-vivo.php` },
-  { id: 'tudn',               name: 'TUDN',                  emoji: '⚽', cat: 'sport', url: `${BASE}/tudn-en-vivo.php` },
-  { id: 'tyc-sports',         name: 'TyC Sports',            emoji: '🏆', cat: 'sport', url: `${BASE}/tyc-sports-en-vivo.php` },
-  { id: 'tnt-sports',         name: 'TNT Sports',            emoji: '💥', cat: 'sport', url: `${BASE}/tnt-sports-en-vivo.php` },
-  { id: 'liga1max',           name: 'Liga 1 MAX',            emoji: '🎽', cat: 'sport', url: `${BASE}/liga-1-max-en-vivo.php` },
-  { id: 'movistar-dep',       name: 'Movistar Deportes',     emoji: '📱', cat: 'sport', url: `${BASE}/movistar-deportes-en-vivo.php` },
-  { id: 'movistar-lcl',       name: 'Movistar Liga Camp.',   emoji: '🏆', cat: 'sport', url: `${BASE}/movistar-liga-de-campeones-en-vivo.php` },
 
-  // NOTICIAS
-  { id: 'cnn-espanol',  name: 'CNN en Español', emoji: '📺', cat: 'news', url: `${BASE}/cnn-en-espanol-en-vivo.php` },
-  { id: 'cnn-us',       name: 'CNN USA',        emoji: '🌎', cat: 'news', url: `${BASE}/cnn-en-vivo.php` },
-  { id: 'bbc-world',    name: 'BBC World',      emoji: '🇬🇧', cat: 'news', url: `${BASE}/bbc-world-en-vivo.php` },
-  { id: 'telemundo',    name: 'Telemundo',      emoji: '🌐', cat: 'news', url: `${BASE}/telemundo-en-vivo.php` },
-  { id: 'univision',    name: 'Univision',      emoji: '📡', cat: 'news', url: `${BASE}/univision-en-vivo.php` },
-  { id: 'antena3',      name: 'Antena 3',       emoji: '📡', cat: 'news', url: `${BASE}/antena-3-en-vivo.php` },
-  { id: 'caracol',      name: 'Caracol TV',     emoji: '🦋', cat: 'news', url: `${BASE}/caracol-tv-en-vivo.php` },
-  { id: 'rcn',          name: 'RCN',            emoji: '📻', cat: 'news', url: `${BASE}/rcn-en-vivo.php` },
+  // ⚽ DEPORTES — Los que todo hombre sigue
+  { id: 'espn',            name: 'ESPN',               emoji: '🏟️', cat: 'sport', url: `${BASE}/espn-en-vivo.php` },
+  { id: 'espn2',           name: 'ESPN 2',             emoji: '🏟️', cat: 'sport', url: `${SPORT}espn-2` },
+  { id: 'espn3',           name: 'ESPN 3',             emoji: '🏟️', cat: 'sport', url: `${SPORT}espn-3` },
+  { id: 'espn4',           name: 'ESPN 4',             emoji: '🏟️', cat: 'sport', url: `${SPORT}espn-4` },
+  { id: 'espn5',           name: 'ESPN 5',             emoji: '🏟️', cat: 'sport', url: `${SPORT}espn-5` },
+  { id: 'fox-sports',      name: 'FOX Sports',         emoji: '🦊', cat: 'sport', url: `${SPORT}fox-sports` },
+  { id: 'fox-sports2',     name: 'FOX Sports 2',       emoji: '🦊', cat: 'sport', url: `${SPORT}fox-sports-2` },
+  { id: 'fox-sports3',     name: 'FOX Sports 3',       emoji: '🦊', cat: 'sport', url: `${SPORT}fox-sports-3` },
+  { id: 'fox-premium',     name: 'FOX Premium',        emoji: '⭐', cat: 'sport', url: `${BASE}/fox-sports-premium-en-vivo.php` },
+  { id: 'dazn-f1',         name: 'DAZN F1 🏎️',        emoji: '🏎️', cat: 'sport', url: `${BASE}/dazn-f1-en-vivo.php` },
+  { id: 'dazn-laliga',     name: 'DAZN LaLiga',        emoji: '⚽', cat: 'sport', url: `${SPORT}dazn-laliga` },
+  { id: 'dazn1',           name: 'DAZN 1',             emoji: '📺', cat: 'sport', url: `${SPORT}dazn-1` },
+  { id: 'dazn2',           name: 'DAZN 2',             emoji: '📺', cat: 'sport', url: `${SPORT}dazn-2` },
+  { id: 'dsports',         name: 'DSports',            emoji: '🎽', cat: 'sport', url: `${SPORT}dsports` },
+  { id: 'dsports2',        name: 'DSports 2',          emoji: '🎽', cat: 'sport', url: `${SPORT}dsports-2` },
+  { id: 'dsports-plus',    name: 'DSports Plus',       emoji: '🎽', cat: 'sport', url: `${SPORT}dsports-plus` },
+  { id: 'goltv',           name: 'GolTV',              emoji: '⚽', cat: 'sport', url: `${SPORT}goltv` },
+  { id: 'tudn',            name: 'TUDN',               emoji: '⚽', cat: 'sport', url: `${BASE}/tudn-en-vivo.php` },
+  { id: 'tyc-sports',      name: 'TyC Sports',         emoji: '🏆', cat: 'sport', url: `${BASE}/tyc-sports-en-vivo.php` },
+  { id: 'movistar-dep',    name: 'Movistar Deportes',  emoji: '📱', cat: 'sport', url: `${SPORT}movistar-deportes` },
+  { id: 'liga1max',        name: 'Liga 1 MAX',         emoji: '⚽', cat: 'sport', url: `${BASE}/liga-1-max-en-vivo.php` },
+  { id: 'bein-esp',        name: 'beIN Sports',        emoji: '🌍', cat: 'sport', url: `${SPORT}bein-sports-espanol` },
+  { id: 'azteca-dep',      name: 'Azteca Deportes',    emoji: '🦅', cat: 'sport', url: `${SPORT}azteca-deportes` },
+  { id: 'espn-dep',        name: 'ESPN Deportes',      emoji: '🏟️', cat: 'sport', url: `${SPORT}espn-deportes` },
+  { id: 'premiere1',       name: 'Premiere 1',         emoji: '🏅', cat: 'sport', url: `${SPORT}premiere-1` },
+  { id: 'premiere2',       name: 'Premiere 2',         emoji: '🏅', cat: 'sport', url: `${SPORT}premiere-2` },
+  { id: 'cbs-sports',      name: 'CBS Sports',         emoji: '🏈', cat: 'sport', url: `${SPORT}cbs-sports-network` },
+  { id: 'caliente-tv',     name: 'Caliente TV 🥊',     emoji: '🥊', cat: 'sport', url: `${SPORT}caliente-tv` },
+  { id: 'hisports',        name: 'Hisports',           emoji: '🏆', cat: 'sport', url: `${SPORT}hisports` },
 
-  // ENTRETENIMIENTO
-  { id: 'disney',       name: 'Disney Channel', emoji: '🏰', cat: 'ent', url: `${BASE}/disney-channel-en-vivo.php` },
-  { id: 'cartoon',      name: 'Cartoon Network',emoji: '🎨', cat: 'ent', url: `${BASE}/cartoon-network-en-vivo.php` },
-  { id: 'tooncast',     name: 'Tooncast',       emoji: '🎭', cat: 'ent', url: `${BASE}/tooncast-en-vivo.php` },
-  { id: 'discovery',    name: 'Discovery',      emoji: '🔭', cat: 'ent', url: `${BASE}/discovery-channel-en-vivo.php` },
-  { id: 'history',      name: 'History',        emoji: '🏛️', cat: 'ent', url: `${BASE}/history-channel-en-vivo.php` },
-  { id: 'animal-planet',name: 'Animal Planet',  emoji: '🐘', cat: 'ent', url: `${BASE}/animal-planet-en-vivo.php` },
-  { id: 'nat-geo',      name: 'Nat Geo',        emoji: '🌍', cat: 'ent', url: `${BASE}/national-geographic-en-vivo.php` },
-  { id: 'tnt',          name: 'TNT',            emoji: '💥', cat: 'ent', url: `${BASE}/tnt-en-vivo.php` },
-  { id: 'star',         name: 'Star Channel',   emoji: '⭐', cat: 'ent', url: `${BASE}/star-channel-en-vivo.php` },
-  { id: 'cinemax',      name: 'Cinemax',        emoji: '🎬', cat: 'ent', url: `${BASE}/cinemax-en-vivo.php` },
-  { id: 'space',        name: 'Space',          emoji: '🚀', cat: 'ent', url: `${BASE}/space-en-vivo.php` },
-  { id: 'syfy',         name: 'Syfy',           emoji: '👾', cat: 'ent', url: `${BASE}/syfy-en-vivo.php` },
-  { id: 'warner',       name: 'Warner Channel', emoji: '🎥', cat: 'ent', url: `${BASE}/warner-channel-en-vivo.php` },
-  { id: 'fx',           name: 'FX',             emoji: '🎞️', cat: 'ent', url: `${BASE}/fx-en-vivo.php` },
-  { id: 'axn',          name: 'AXN',            emoji: '🔥', cat: 'ent', url: `${BASE}/axn-en-vivo.php` },
-  { id: 'amc',          name: 'AMC',            emoji: '🎭', cat: 'ent', url: `${BASE}/amc-en-vivo.php` },
-  { id: 'sony',         name: 'Sony Channel',   emoji: '📺', cat: 'ent', url: `${BASE}/sony-channel-en-vivo.php` },
+  // 🔥 ACCIÓN / PELÍCULAS — Cine de hombres
+  { id: 'amc',      name: 'AMC',           emoji: '🎬', cat: 'action', url: `${BASE}/amc-en-vivo.php` },
+  { id: 'tnt',      name: 'TNT',           emoji: '💥', cat: 'action', url: `${BASE}/tnt-en-vivo.php` },
+  { id: 'fx',       name: 'FX',            emoji: '🎞️', cat: 'action', url: `${BASE}/fx-en-vivo.php` },
+  { id: 'axn',      name: 'AXN',           emoji: '🔥', cat: 'action', url: `${BASE}/axn-en-vivo.php` },
+  { id: 'syfy',     name: 'Syfy',          emoji: '👾', cat: 'action', url: `${BASE}/syfy-en-vivo.php` },
+  { id: 'space',    name: 'Space',         emoji: '🚀', cat: 'action', url: `${BASE}/space-en-vivo.php` },
+  { id: 'warner',   name: 'Warner Channel',emoji: '🎥', cat: 'action', url: `${BASE}/warner-channel-en-vivo.php` },
+  { id: 'cinemax',  name: 'Cinemax',       emoji: '🍿', cat: 'action', url: `${BASE}/cinemax-en-vivo.php` },
+  { id: 'star',     name: 'Star Channel',  emoji: '⭐', cat: 'action', url: `${BASE}/star-channel-en-vivo.php` },
+  { id: 'sony',     name: 'Sony Channel',  emoji: '📺', cat: 'action', url: `${BASE}/sony-channel-en-vivo.php` },
 
-  // ANIME (streams m3u8 verificados - Samsung TV Plus vía iptv-org)
-  { id: 'naruto',       name: 'Naruto 24/7',      emoji: '🍥', cat: 'anime', url: 'https://d21vn5eki5qsdi.cloudfront.net/playlist.m3u8',    type: 'm3u8' },
-  { id: 'filmrise',     name: 'FilmRise Anime',   emoji: '🎌', cat: 'anime', url: 'https://dvu7aia8rjlfm.cloudfront.net/master.m3u8',        type: 'm3u8' },
-  { id: 'retrocrush',   name: 'RetroCrush',       emoji: '📼', cat: 'anime', url: 'https://d2nqmwm1ndpgi2.cloudfront.net/playlist.m3u8',     type: 'm3u8' },
-  { id: 'itsanime',     name: "It's Anime",        emoji: '✨', cat: 'anime', url: 'https://d1isoijd9dbbf7.cloudfront.net/playlist.m3u8',     type: 'm3u8' },
-  { id: 'hunterxhunter',name: 'Hunter x Hunter',  emoji: '🕷️', cat: 'anime', url: 'https://d190au8yjmla79.cloudfront.net/playlist.m3u8',     type: 'm3u8' },
-  { id: 'jojo',         name: "JoJo's Bizarre",   emoji: '💎', cat: 'anime', url: 'https://d2kqaqstkr42e1.cloudfront.net/playlist.m3u8',     type: 'm3u8' },
-  { id: 'animehidive',  name: 'ANIME x HIDIVE',   emoji: '🌟', cat: 'anime', url: 'https://d3f088nnrrvkwf.cloudfront.net/v1/amc_anime_x_hidive_1/samsungheadend_us/latest/main/hls/playlist.m3u8', type: 'm3u8' },
-  { id: 'kartoon',      name: 'Kartoon Channel',  emoji: '🎠', cat: 'anime', url: 'https://d2z0ysa6dgxhlc.cloudfront.net/kchan.m3u8',        type: 'm3u8' },
-  { id: 'ygo',          name: 'Yu-Gi-Oh!',        emoji: '🃏', cat: 'anime', url: 'https://amg01796-amg01796c19-rakuten-gb-7486.playouts.now.amagi.tv/playlist/amg01796-fastmediafast-yugioh2en-rakutengb/playlist.m3u8', type: 'm3u8' },
+  // 🧠 CONOCIMIENTO — Historia, Ciencia, Naturaleza
+  { id: 'history',      name: 'History Channel', emoji: '🏛️', cat: 'know', url: `${BASE}/history-channel-en-vivo.php` },
+  { id: 'discovery',    name: 'Discovery',        emoji: '🔭', cat: 'know', url: `${BASE}/discovery-channel-en-vivo.php` },
+  { id: 'nat-geo',      name: 'Nat Geo',           emoji: '🌍', cat: 'know', url: `${BASE}/national-geographic-en-vivo.php` },
+  { id: 'animal-planet',name: 'Animal Planet',     emoji: '🐆', cat: 'know', url: `${BASE}/animal-planet-en-vivo.php` },
 
-  // GENERAL
-  { id: 'telefe',       name: 'Telefe',         emoji: '📺', cat: 'gen', url: `${BASE}/telefe-en-vivo.php` },
-  { id: 'el-trece',     name: 'El Trece',       emoji: '3️⃣',  cat: 'gen', url: `${BASE}/el-trece-en-vivo.php` },
-  { id: 'latina',       name: 'Latina TV',      emoji: '🌅', cat: 'gen', url: `${BASE}/latina-en-vivo.php` },
-  { id: 'america-tv',   name: 'América TV',     emoji: '🌎', cat: 'gen', url: `${BASE}/america-tv-en-vivo.php` },
-  { id: 'atv',          name: 'ATV',            emoji: '📡', cat: 'gen', url: `${BASE}/atv-en-vivo.php` },
-  { id: 'imagen-tv',    name: 'Imagen TV',      emoji: '🖼️', cat: 'gen', url: `${BASE}/imagen-tv-en-vivo.php` },
-  { id: 'azteca7',      name: 'Azteca 7',       emoji: '🦅', cat: 'gen', url: `${BASE}/azteca-7-en-vivo.php` },
-  { id: 'azteca-uno',   name: 'Azteca Uno',     emoji: '🦅', cat: 'gen', url: `${BASE}/azteca-uno-en-vivo.php` },
-  { id: 'canal5',       name: 'Canal 5',        emoji: '5️⃣',  cat: 'gen', url: `${BASE}/canal-5-en-vivo.php` },
+  // 📰 NOTICIAS — Para estar al tanto
+  { id: 'cnn-esp',  name: 'CNN en Español', emoji: '📡', cat: 'news', url: `${BASE}/cnn-en-espanol-en-vivo.php` },
+  { id: 'cnn-us',   name: 'CNN USA',        emoji: '🌎', cat: 'news', url: `${BASE}/cnn-en-vivo.php` },
+  { id: 'bbc',      name: 'BBC World',      emoji: '🇬🇧', cat: 'news', url: `${BASE}/bbc-world-en-vivo.php` },
+  { id: 'caracol',  name: 'Caracol TV',     emoji: '🦋', cat: 'news', url: `${BASE}/caracol-tv-en-vivo.php` },
+  { id: 'rcn',      name: 'RCN',            emoji: '📻', cat: 'news', url: `${BASE}/rcn-en-vivo.php` },
+  { id: 'antena3',  name: 'Antena 3',       emoji: '📡', cat: 'news', url: `${BASE}/antena-3-en-vivo.php` },
+
 ];
 
 let currentIndex = -1;
 let activeCategory = 'all';
 let searchTerm = '';
 
-const badgeClass = { sport: 'badge-sport', news: 'badge-news', ent: 'badge-ent', gen: 'badge-gen', anime: 'badge-anime' };
-const catLabel   = { sport: 'Deporte', news: 'Noticias', ent: 'Entretenimiento', gen: 'General', anime: 'Anime' };
+const badgeClass = { sport: 'badge-sport', action: 'badge-action', know: 'badge-know', news: 'badge-news' };
+const catLabel   = { sport: 'Deportes', action: 'Acción', know: 'Conocimiento', news: 'Noticias' };
 let hlsInstance = null;
 
 function getFiltered() {
@@ -551,12 +536,11 @@ function getFiltered() {
 }
 
 function updateCounts() {
-  document.getElementById('count-all').textContent   = channels.length;
-  document.getElementById('count-sport').textContent = channels.filter(c => c.cat === 'sport').length;
-  document.getElementById('count-news').textContent  = channels.filter(c => c.cat === 'news').length;
-  document.getElementById('count-ent').textContent   = channels.filter(c => c.cat === 'ent').length;
-  document.getElementById('count-gen').textContent   = channels.filter(c => c.cat === 'gen').length;
-  document.getElementById('count-anime').textContent = channels.filter(c => c.cat === 'anime').length;
+  document.getElementById('count-all').textContent    = channels.length;
+  document.getElementById('count-sport').textContent  = channels.filter(c => c.cat === 'sport').length;
+  document.getElementById('count-action').textContent = channels.filter(c => c.cat === 'action').length;
+  document.getElementById('count-know').textContent   = channels.filter(c => c.cat === 'know').length;
+  document.getElementById('count-news').textContent   = channels.filter(c => c.cat === 'news').length;
 }
 
 function renderChannels() {
@@ -575,11 +559,10 @@ function renderChannels() {
 
   if (activeCategory === 'all' && !searchTerm) {
     const groups = {
-      sport: { label: 'Deportes', items: [] },
-      news:  { label: 'Noticias', items: [] },
-      ent:   { label: 'Entretenimiento', items: [] },
-      gen:   { label: 'General', items: [] },
-      anime: { label: '🎌 Anime (streams verificados)', items: [] },
+      sport:  { label: '⚽ Deportes',         items: [] },
+      action: { label: '🔥 Acción / Cine',    items: [] },
+      know:   { label: '🧠 Historia & Ciencia', items: [] },
+      news:   { label: '📰 Noticias',          items: [] },
     };
     filtered.forEach(ch => groups[ch.cat].items.push(ch));
     Object.values(groups).forEach(g => {
