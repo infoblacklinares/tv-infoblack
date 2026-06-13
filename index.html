@@ -9,110 +9,101 @@
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="logo.png"/>
 <title>Infoblack TV</title>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
 <style>
 :root{
-  --bg:#0a0a0a; --surface:#111; --card:#181818;
-  --border:#2a2a2a; --gold:#f5a623; --red:#e50914;
-  --text:#fff; --muted:#888; --radius:8px;
+  --bg:#0a0a0a;--surface:#111;--card:#161616;
+  --border:#252525;--gold:#f5a623;--red:#e50914;
+  --text:#fff;--muted:#777;--radius:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden;}
 
 /* HEADER */
 .hdr{
   position:sticky;top:0;z-index:50;
-  display:flex;align-items:center;gap:12px;
-  padding:10px 16px;
-  background:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.85) 100%);
-  backdrop-filter:blur(10px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;padding:10px 14px;
+  background:rgba(10,10,10,.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
 }
-.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;}
-.logo img{height:34px;width:34px;border-radius:50%;object-fit:cover;}
-.logo-text{font-weight:900;font-size:1.05rem;color:var(--gold);letter-spacing:.5px;}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;}
+.logo img{height:32px;width:32px;border-radius:50%;object-fit:cover;}
+.logo-text{font-weight:900;font-size:1rem;color:var(--gold);letter-spacing:.5px;}
 .search-wrap{
   flex:1;display:flex;align-items:center;gap:8px;
   background:var(--card);border:1px solid var(--border);
-  border-radius:20px;padding:0 14px;max-width:360px;
+  border-radius:20px;padding:0 13px;max-width:340px;
 }
-.search-wrap svg{color:var(--muted);flex-shrink:0;}
 .search-wrap input{
   flex:1;background:none;border:none;outline:none;
-  color:var(--text);font-size:.875rem;padding:9px 0;
+  color:var(--text);font-size:.85rem;padding:9px 0;
 }
 .search-wrap input::placeholder{color:var(--muted);}
 
-/* CATEGORÍAS */
+/* CATS */
 .cats{
-  display:flex;gap:8px;overflow-x:auto;padding:10px 16px;
+  display:flex;gap:7px;overflow-x:auto;padding:10px 14px;
   border-bottom:1px solid var(--border);scrollbar-width:none;
 }
 .cats::-webkit-scrollbar{display:none;}
 .cat-btn{
-  display:flex;align-items:center;gap:6px;white-space:nowrap;
-  padding:7px 16px;border-radius:20px;border:1px solid var(--border);
-  background:var(--card);color:var(--muted);font-size:.8rem;font-weight:600;
+  display:flex;align-items:center;gap:5px;white-space:nowrap;
+  padding:6px 15px;border-radius:20px;border:1px solid var(--border);
+  background:var(--card);color:var(--muted);font-size:.78rem;font-weight:700;
   cursor:pointer;transition:all .15s;flex-shrink:0;
 }
-.cat-btn:hover{color:var(--text);border-color:#555;}
+.cat-btn:hover{color:var(--text);border-color:#444;}
 .cat-btn.active{background:var(--gold);border-color:var(--gold);color:#000;}
 
-/* CONTENT */
-.page{padding:16px;display:flex;flex-direction:column;gap:20px;min-height:calc(100vh - 140px);}
+/* PAGE */
+.page{padding:14px;display:flex;flex-direction:column;gap:22px;}
 
-.row-title{
-  font-size:.8rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;
+.section-title{
+  font-size:.72rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:10px;
 }
-.row-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
 
-/* CANALES GRID */
+/* GRID */
 .ch-grid{
   display:grid;gap:10px;
-  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
 }
 .ch-card{
   position:relative;background:var(--card);border:1px solid var(--border);
   border-radius:var(--radius);overflow:hidden;cursor:pointer;
-  transition:transform .15s,border-color .15s;
+  transition:transform .15s,border-color .15s,box-shadow .15s;
 }
-.ch-card:hover{transform:translateY(-3px);border-color:var(--gold);}
-.ch-card.playing{border-color:var(--gold);box-shadow:0 0 0 2px rgba(245,166,35,.3);}
+.ch-card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 8px 24px rgba(0,0,0,.5);}
+.ch-card.playing{border-color:var(--gold);box-shadow:0 0 0 2px rgba(245,166,35,.4);}
 .ch-thumb{
-  width:100%;aspect-ratio:16/9;background:#111;
+  width:100%;aspect-ratio:16/9;background:#0d0d0d;
   display:flex;align-items:center;justify-content:center;
-  font-size:2rem;overflow:hidden;position:relative;
+  overflow:hidden;position:relative;
 }
-.ch-thumb img{width:100%;height:100%;object-fit:contain;padding:10px;}
-.ch-thumb .fallback{position:absolute;font-size:2rem;}
-.ch-live-badge{
-  position:absolute;top:6px;left:6px;
-  background:var(--red);color:#fff;font-size:.52rem;font-weight:800;
-  padding:2px 5px;border-radius:3px;letter-spacing:.5px;z-index:2;
+.ch-thumb img{width:100%;height:100%;object-fit:contain;padding:12px;}
+.ch-thumb .ico{font-size:2.2rem;}
+.live-dot{
+  position:absolute;top:6px;left:7px;z-index:2;
+  display:flex;align-items:center;gap:4px;
+  background:rgba(0,0,0,.75);border-radius:10px;padding:2px 7px 2px 5px;
 }
+.live-dot .dot{width:6px;height:6px;background:var(--red);border-radius:50%;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.live-dot span{font-size:.55rem;font-weight:800;color:#fff;letter-spacing:.5px;}
 .ch-del{
   position:absolute;top:5px;right:5px;z-index:3;
   width:20px;height:20px;border-radius:50%;
-  background:rgba(0,0,0,.7);border:1px solid #444;
+  background:rgba(0,0,0,.65);border:1px solid #333;
   display:none;align-items:center;justify-content:center;
-  cursor:pointer;font-size:.7rem;color:var(--muted);
-  transition:background .15s,color .15s;
+  cursor:pointer;font-size:.68rem;color:var(--muted);transition:all .15s;
 }
 .ch-del:hover{background:var(--red);color:#fff;border-color:var(--red);}
 .ch-card:hover .ch-del{display:flex;}
 .ch-info{padding:8px 9px 10px;}
 .ch-name{font-size:.75rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ch-group{font-size:.63rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ch-sub{font-size:.62rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-/* SKELETON */
-.skeleton{background:linear-gradient(90deg,#1a1a1a 25%,#222 50%,#1a1a1a 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.sk-card{border-radius:var(--radius);overflow:hidden;}
-.sk-thumb{width:100%;aspect-ratio:16/9;}
-.sk-text{height:10px;margin:8px 9px;border-radius:4px;}
-.sk-text2{height:8px;margin:4px 9px 10px;width:60%;border-radius:4px;}
-
-/* PLAYER MODAL */
+/* MODAL PLAYER */
 .modal{
   display:none;position:fixed;inset:0;z-index:100;
   background:#000;flex-direction:column;
@@ -120,393 +111,390 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Segoe 
 .modal.open{display:flex;}
 .modal-bar{
   display:flex;align-items:center;justify-content:space-between;
-  padding:12px 16px;background:rgba(0,0,0,.9);flex-shrink:0;
+  padding:11px 15px;background:rgba(0,0,0,.9);flex-shrink:0;
+  border-bottom:1px solid var(--border);
 }
-.modal-info .modal-title{font-size:.95rem;font-weight:700;}
-.modal-info .modal-sub{font-size:.72rem;color:var(--muted);margin-top:2px;}
-.modal-close{background:none;border:none;color:var(--text);cursor:pointer;padding:4px;}
-.modal-close svg{width:24px;height:24px;fill:currentColor;}
-.player-box{flex:1;position:relative;background:#000;display:flex;align-items:center;justify-content:center;}
-.player-box video{width:100%;height:100%;max-height:100%;}
+.modal-title{font-size:.92rem;font-weight:800;}
+.modal-sub{font-size:.7rem;color:var(--muted);margin-top:2px;}
+.modal-close{
+  background:none;border:none;color:var(--text);cursor:pointer;
+  width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--card);border:1px solid var(--border);font-size:1rem;
+}
+.modal-close:hover{background:var(--red);border-color:var(--red);}
+.player-box{flex:1;position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .player-box iframe{width:100%;height:100%;border:none;}
-.player-err{
-  display:none;flex-direction:column;align-items:center;gap:12px;
-  position:absolute;inset:0;background:#000;color:var(--muted);
-  justify-content:center;text-align:center;padding:20px;
+.loading-overlay{
+  position:absolute;inset:0;background:#000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  color:var(--muted);font-size:.85rem;z-index:5;
 }
-.player-err .err-icon{font-size:3rem;}
-.player-err p{font-size:.875rem;}
-.player-err button{
-  background:var(--gold);color:#000;border:none;border-radius:8px;
-  padding:10px 24px;font-size:.875rem;font-weight:700;cursor:pointer;margin-top:8px;
-}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
 .modal-footer{
   display:flex;align-items:center;justify-content:center;gap:8px;
-  padding:10px 16px;background:rgba(0,0,0,.9);flex-shrink:0;flex-wrap:wrap;
+  padding:10px 14px;background:rgba(0,0,0,.9);flex-shrink:0;flex-wrap:wrap;
+  border-top:1px solid var(--border);
 }
 .fbtn{
   background:var(--card);border:1px solid var(--border);
   color:var(--text);padding:7px 16px;border-radius:20px;
-  cursor:pointer;font-size:.78rem;font-weight:600;transition:background .15s;
+  cursor:pointer;font-size:.76rem;font-weight:700;transition:background .15s;
 }
 .fbtn:hover{background:var(--border);}
 .fbtn.gold{background:var(--gold);border-color:var(--gold);color:#000;}
 
 /* INSTALL BANNER */
-.install-banner{
-  display:none;position:fixed;bottom:16px;left:12px;right:12px;z-index:60;
-  background:linear-gradient(135deg,#1c1200,#111);
-  border:1px solid var(--gold);border-radius:12px;padding:14px 16px;
-  box-shadow:0 8px 32px rgba(0,0,0,.7);
+.inst{
+  display:none;position:fixed;bottom:14px;left:12px;right:12px;z-index:60;
+  background:#111;border:1px solid var(--gold);border-radius:12px;padding:14px;
+  box-shadow:0 8px 32px rgba(0,0,0,.8);
 }
-.install-banner.show{display:block;}
-.ib-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.ib-title{font-size:.9rem;font-weight:700;color:var(--gold);}
-.ib-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;}
-.ib-sub{font-size:.75rem;color:var(--muted);margin-bottom:10px;}
-.ib-btn{
-  width:100%;background:var(--gold);color:#000;border:none;
-  border-radius:8px;padding:10px;font-size:.875rem;font-weight:800;cursor:pointer;
-}
-
-/* LOADING / EMPTY */
-.status-msg{text-align:center;padding:40px;color:var(--muted);font-size:.875rem;}
-.spinner{
-  width:32px;height:32px;border:3px solid var(--border);
-  border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
+.inst.show{display:block;}
+.inst-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.inst-title{font-size:.88rem;font-weight:800;color:var(--gold);}
+.inst-x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;}
+.inst-sub{font-size:.72rem;color:var(--muted);margin-bottom:10px;}
+.inst-btn{width:100%;background:var(--gold);color:#000;border:none;border-radius:8px;padding:10px;font-size:.85rem;font-weight:800;cursor:pointer;}
 
 /* TOAST */
 .toast{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(6px);
   z-index:200;background:rgba(20,20,20,.97);border:1px solid var(--border);
-  color:var(--text);padding:9px 20px;border-radius:20px;font-size:.8rem;font-weight:600;
-  opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;
+  color:var(--text);padding:8px 18px;border-radius:20px;font-size:.78rem;font-weight:700;
+  opacity:0;transition:all .2s;pointer-events:none;white-space:nowrap;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:var(--border);}
+/* EMPTY */
+.empty{text-align:center;padding:40px;color:var(--muted);font-size:.85rem;}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="hdr">
   <a class="logo" href="#">
     <img src="logo.png" alt="IB" onerror="this.style.display='none'">
     <span class="logo-text">INFOBLACK TV</span>
   </a>
   <div class="search-wrap">
-    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input id="searchInput" type="search" placeholder="Buscar canal…"/>
+    <svg width="14" height="14" fill="none" stroke="#666" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="q" type="search" placeholder="Buscar canal…"/>
   </div>
 </header>
 
-<!-- CATEGORÍAS -->
 <div class="cats" id="cats">
-  <button class="cat-btn active" data-list="cl">🇨🇱 Chile</button>
-  <button class="cat-btn" data-list="animation">🎌 Anime</button>
-  <button class="cat-btn" data-list="sports">🏆 Deportes / WWE</button>
-  <button class="cat-btn" data-list="movies">🎬 Películas</button>
-  <button class="cat-btn" data-list="news">📰 Noticias</button>
-  <button class="cat-btn" data-list="music">🎵 Música</button>
-  <button class="cat-btn" data-list="kids">👶 Infantil</button>
-  <button class="cat-btn" data-list="spa">🌎 Latino</button>
-  <button class="cat-btn" data-list="ar">🇦🇷 Argentina</button>
-  <button class="cat-btn" data-list="mx">🇲🇽 México</button>
-  <button class="cat-btn" data-list="us">🇺🇸 USA</button>
+  <button class="cat-btn active" data-cat="todos">🔥 Todos</button>
+  <button class="cat-btn" data-cat="deportes">⚽ Deportes</button>
+  <button class="cat-btn" data-cat="wwe">🥊 WWE / Lucha</button>
+  <button class="cat-btn" data-cat="anime">🎌 Anime</button>
+  <button class="cat-btn" data-cat="chile">🇨🇱 Chile</button>
+  <button class="cat-btn" data-cat="noticias">📰 Noticias</button>
+  <button class="cat-btn" data-cat="peliculas">🎬 Películas</button>
+  <button class="cat-btn" data-cat="musica">🎵 Música</button>
+  <button class="cat-btn" data-cat="infantil">👶 Infantil</button>
 </div>
 
-<!-- CONTENIDO -->
 <div class="page" id="page"></div>
 
-<!-- PLAYER MODAL -->
+<!-- PLAYER -->
 <div class="modal" id="modal">
   <div class="modal-bar">
-    <div class="modal-info">
-      <div class="modal-title" id="modalTitle">—</div>
-      <div class="modal-sub" id="modalSub">Canal en vivo</div>
+    <div>
+      <div class="modal-title" id="mTitle">—</div>
+      <div class="modal-sub" id="mSub">Canal en vivo</div>
     </div>
-    <button class="modal-close" onclick="closePlayer()">
-      <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-    </button>
+    <button class="modal-close" onclick="closePlayer()">✕</button>
   </div>
-  <div class="player-box" id="playerBox">
-    <video id="videoEl" controls autoplay playsinline></video>
-    <div class="player-err" id="playerErr">
-      <div class="err-icon">📡</div>
-      <p>Este canal no está disponible en este momento.<br>Intenta con otro servidor o canal.</p>
-      <button onclick="tryNext()">▶ Siguiente canal</button>
+  <div class="player-box" id="pbox">
+    <div class="loading-overlay" id="loadingOv">
+      <div class="spinner"></div>
+      <span>Conectando…</span>
     </div>
+    <iframe id="pframe" allowfullscreen allow="autoplay; fullscreen"></iframe>
   </div>
   <div class="modal-footer">
-    <button class="fbtn" onclick="prevCh()">◀ Anterior</button>
+    <button class="fbtn" onclick="navCh(-1)">◀ Anterior</button>
     <button class="fbtn gold" onclick="goFull()">⛶ Pantalla completa</button>
-    <button class="fbtn" onclick="nextCh()">Siguiente ▶</button>
+    <button class="fbtn" onclick="navCh(1)">Siguiente ▶</button>
   </div>
 </div>
 
-<!-- INSTALL BANNER -->
-<div class="install-banner" id="installBanner">
-  <div class="ib-row">
-    <span class="ib-title">📲 Instala Infoblack TV</span>
-    <button class="ib-close" onclick="dismissInstall()">✕</button>
+<!-- INSTALL -->
+<div class="inst" id="instBanner">
+  <div class="inst-row">
+    <span class="inst-title">📲 Instala Infoblack TV</span>
+    <button class="inst-x" onclick="dismissInst()">✕</button>
   </div>
-  <div class="ib-sub">Acceso rápido desde tu pantalla de inicio</div>
-  <button class="ib-btn" onclick="installApp()">INSTALAR GRATIS</button>
+  <div class="inst-sub">Acceso directo desde tu pantalla de inicio</div>
+  <button class="inst-btn" onclick="installApp()">INSTALAR GRATIS</button>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-/* ══ CONFIG ══ */
-const PROXY   = '/api/stream?url=';
-const API     = '/api/channels?list=';
-const HIDDEN  = 'ib_hidden_v2';
-const CORS_PX = 'https://corsproxy.io/?'; // fallback
+/* ═══════════════════════════════════════
+   CANALES — fuentes embed verificadas
+   telegratishd.com  → deportes, cable, chile
+   tododeportes.xyz  → deportes, wwe
+   ═══════════════════════════════════════ */
+const CHANNELS = [
 
-/* ══ ESTADO ══ */
-let hidden      = new Set(JSON.parse(localStorage.getItem(HIDDEN)||'[]'));
-let allChannels = [];
+  /* ── DEPORTES ── */
+  { name:'ESPN',          sub:'Deportes HD',   cat:'deportes', ico:'📺', src:'https://www.telegratishd.com/espn-en-vivo.php' },
+  { name:'ESPN 2',        sub:'Deportes HD',   cat:'deportes', ico:'📺', src:'https://www.telegratishd.com/espn-2-en-vivo.php' },
+  { name:'ESPN 3',        sub:'Deportes HD',   cat:'deportes', ico:'📺', src:'https://www.telegratishd.com/espn-3-en-vivo.php' },
+  { name:'Fox Sports',    sub:'Deportes HD',   cat:'deportes', ico:'🦊', src:'https://www.telegratishd.com/fox-sports-en-vivo.php' },
+  { name:'Fox Sports 2',  sub:'Deportes HD',   cat:'deportes', ico:'🦊', src:'https://www.telegratishd.com/fox-sports-2-en-vivo.php' },
+  { name:'Fox Sports 3',  sub:'Deportes HD',   cat:'deportes', ico:'🦊', src:'https://www.telegratishd.com/fox-sports-3-en-vivo.php' },
+  { name:'DirecTV Sports',sub:'Deportes',      cat:'deportes', ico:'📡', src:'https://www.telegratishd.com/directv-sports-en-vivo.php' },
+  { name:'TyC Sports',    sub:'Fútbol',        cat:'deportes', ico:'⚽', src:'https://www.telegratishd.com/tyc-sports-en-vivo.php' },
+  { name:'Star+ Deportes',sub:'Deportes',      cat:'deportes', ico:'⭐', src:'https://www.telegratishd.com/star-plus-en-vivo.php' },
+  { name:'Gol TV',        sub:'Fútbol',        cat:'deportes', ico:'⚽', src:'https://www.telegratishd.com/gol-tv-en-vivo.php' },
+  { name:'Win Sports',    sub:'Colombia',      cat:'deportes', ico:'🏆', src:'https://www.telegratishd.com/win-sports-en-vivo.php' },
+  { name:'Deportes (tod)',sub:'HD',            cat:'deportes', ico:'🎯', src:'https://www.tododeportes.xyz' },
+
+  /* ── WWE / LUCHA ── */
+  { name:'WWE Network',   sub:'Lucha Libre',   cat:'wwe', ico:'🥊', src:'https://www.tododeportes.xyz/wwe-network-en-vivo.php' },
+  { name:'Fox Sports (WWE)',sub:'RAW / SmackDown',cat:'wwe', ico:'🦊', src:'https://www.telegratishd.com/fox-sports-en-vivo.php' },
+  { name:'ESPN (WWE)',    sub:'Pay-Per-View',  cat:'wwe', ico:'📺', src:'https://www.telegratishd.com/espn-en-vivo.php' },
+  { name:'Claro Sports',  sub:'Lucha & UFC',   cat:'wwe', ico:'🥋', src:'https://www.telegratishd.com/claro-sports-en-vivo.php' },
+
+  /* ── ANIME ── */
+  { name:'Cartoon Network',sub:'Animación',   cat:'anime', ico:'🎨', src:'https://www.telegratishd.com/cartoon-network-en-vivo.php' },
+  { name:'Tooncast',      sub:'Anime / Cartoons',cat:'anime',ico:'🌟', src:'https://www.telegratishd.com/tooncast-en-vivo.php' },
+  { name:'Boomerang',     sub:'Clásicos',     cat:'anime', ico:'🪃', src:'https://www.telegratishd.com/boomerang-en-vivo.php' },
+  { name:'Space',         sub:'Sci-Fi / Anime',cat:'anime',ico:'🚀', src:'https://www.telegratishd.com/space-en-vivo.php' },
+  { name:'I.Sat',         sub:'Series / Anime',cat:'anime',ico:'📡', src:'https://www.telegratishd.com/i-sat-en-vivo.php' },
+
+  /* ── CHILE ── */
+  { name:'Canal 13',      sub:'Chile',         cat:'chile', ico:'📺', src:'https://www.telegratishd.com/canal-13-chile-en-vivo.php' },
+  { name:'CHV',           sub:'Chilevisión',   cat:'chile', ico:'🇨🇱', src:'https://www.telegratishd.com/chilevision-en-vivo.php' },
+  { name:'Mega',          sub:'Chile',         cat:'chile', ico:'📺', src:'https://www.telegratishd.com/mega-chile-en-vivo.php' },
+  { name:'TVN',           sub:'Televisión Nacional',cat:'chile',ico:'🇨🇱', src:'https://www.telegratishd.com/tvn-chile-en-vivo.php' },
+  { name:'La Red',        sub:'Chile',         cat:'chile', ico:'📺', src:'https://www.telegratishd.com/la-red-chile-en-vivo.php' },
+  { name:'CNN Chile',     sub:'Noticias',      cat:'chile', ico:'📰', src:'https://www.telegratishd.com/cnn-chile-en-vivo.php' },
+  { name:'24 Horas',      sub:'TVN Noticias',  cat:'chile', ico:'⏰', src:'https://www.telegratishd.com/24-horas-en-vivo.php' },
+
+  /* ── NOTICIAS ── */
+  { name:'CNN en Español', sub:'Internacional',cat:'noticias',ico:'🌎', src:'https://www.telegratishd.com/cnn-en-espanol-en-vivo.php' },
+  { name:'CNN Chile',     sub:'Chile',         cat:'noticias',ico:'📰', src:'https://www.telegratishd.com/cnn-chile-en-vivo.php' },
+  { name:'Bloomberg',     sub:'Economía',      cat:'noticias',ico:'💹', src:'https://www.telegratishd.com/bloomberg-en-vivo.php' },
+  { name:'Al Jazeera',    sub:'Internacional', cat:'noticias',ico:'🌍', src:'https://www.telegratishd.com/al-jazeera-en-vivo.php' },
+  { name:'BBC World',     sub:'Internacional', cat:'noticias',ico:'🇬🇧', src:'https://www.telegratishd.com/bbc-world-en-vivo.php' },
+  { name:'TN (Todo Noticias)',sub:'Argentina', cat:'noticias',ico:'📡', src:'https://www.telegratishd.com/tn-en-vivo.php' },
+  { name:'Telefe Noticias',sub:'Argentina',    cat:'noticias',ico:'📺', src:'https://www.telegratishd.com/telefe-en-vivo.php' },
+
+  /* ── PELÍCULAS ── */
+  { name:'TNT',           sub:'Series & Cine', cat:'peliculas',ico:'🎬', src:'https://www.telegratishd.com/tnt-en-vivo.php' },
+  { name:'TCM',           sub:'Clásicos',      cat:'peliculas',ico:'🎞️', src:'https://www.telegratishd.com/tcm-en-vivo.php' },
+  { name:'TBS',           sub:'Comedias',      cat:'peliculas',ico:'😂', src:'https://www.telegratishd.com/tbs-en-vivo.php' },
+  { name:'Warner Channel',sub:'Series & Cine', cat:'peliculas',ico:'🎬', src:'https://www.telegratishd.com/warner-channel-en-vivo.php' },
+  { name:'AXN',           sub:'Acción',        cat:'peliculas',ico:'💥', src:'https://www.telegratishd.com/axn-en-vivo.php' },
+  { name:'Space',         sub:'Sci-Fi',        cat:'peliculas',ico:'🚀', src:'https://www.telegratishd.com/space-en-vivo.php' },
+  { name:'FX',            sub:'Series',        cat:'peliculas',ico:'📺', src:'https://www.telegratishd.com/fx-en-vivo.php' },
+  { name:'Sony Channel',  sub:'Entretenimiento',cat:'peliculas',ico:'🎭', src:'https://www.telegratishd.com/sony-channel-en-vivo.php' },
+
+  /* ── MÚSICA ── */
+  { name:'MTV',           sub:'Música & Shows',cat:'musica', ico:'🎵', src:'https://www.telegratishd.com/mtv-en-vivo.php' },
+  { name:'MTV Hits',      sub:'Éxitos',        cat:'musica', ico:'🎶', src:'https://www.telegratishd.com/mtv-hits-en-vivo.php' },
+  { name:'VH1',           sub:'Clásicos',      cat:'musica', ico:'🎸', src:'https://www.telegratishd.com/vh1-en-vivo.php' },
+  { name:'Ritmoson',      sub:'Latino',        cat:'musica', ico:'💃', src:'https://www.telegratishd.com/ritmoson-en-vivo.php' },
+
+  /* ── INFANTIL ── */
+  { name:'Disney Channel',sub:'Infantil',      cat:'infantil',ico:'🏰', src:'https://www.telegratishd.com/disney-channel-en-vivo.php' },
+  { name:'Disney Jr.',    sub:'Niños',         cat:'infantil',ico:'🦁', src:'https://www.telegratishd.com/disney-junior-en-vivo.php' },
+  { name:'Nickelodeon',   sub:'Infantil',      cat:'infantil',ico:'🧽', src:'https://www.telegratishd.com/nickelodeon-en-vivo.php' },
+  { name:'Nick Jr.',      sub:'Preescolar',    cat:'infantil',ico:'👶', src:'https://www.telegratishd.com/nick-jr-en-vivo.php' },
+  { name:'Cartoon Network',sub:'Animación',   cat:'infantil',ico:'🎨', src:'https://www.telegratishd.com/cartoon-network-en-vivo.php' },
+  { name:'Boomerang',     sub:'Clásicos',      cat:'infantil',ico:'🪃', src:'https://www.telegratishd.com/boomerang-en-vivo.php' },
+];
+
+/* ═══ ESTADO ═══ */
+const HIDDEN_KEY = 'ib_hidden_v3';
+let hidden   = new Set(JSON.parse(localStorage.getItem(HIDDEN_KEY)||'[]'));
+let activeCat = 'todos';
+let searchQ   = '';
 let currentList = [];
 let currentIdx  = -1;
-let hlsInst     = null;
-let currentCat  = 'cl';
-let searchTimer = null;
 let deferredPrompt = null;
+let loadTimer = null;
 
-/* ══ FETCH CANALES ══ */
-async function loadChannels(list, search = '') {
-  currentCat = list;
-  const page = document.getElementById('page');
-  page.innerHTML = `<div class="status-msg"><div class="spinner"></div>Cargando canales de iptv-org…</div>`;
-
-  try {
-    let url = `${API}${list}&limit=300`;
-    if (search) url += `&q=${encodeURIComponent(search)}`;
-
-    const r = await fetch(url);
-    if (!r.ok) throw new Error('Error al cargar la lista');
-    const data = await r.json();
-
-    allChannels = (data.channels || []).filter(c => !hidden.has(c.url));
-    renderChannels(allChannels, data.total);
-  } catch (e) {
-    page.innerHTML = `<div class="status-msg">❌ Error: ${e.message}<br><small>Asegúrate de que el backend está desplegado en Vercel</small></div>`;
-  }
+/* ═══ FILTRO ═══ */
+function filtered() {
+  return CHANNELS.filter(c => {
+    if (hidden.has(c.src)) return false;
+    if (activeCat !== 'todos' && c.cat !== activeCat) return false;
+    if (searchQ) {
+      const q = searchQ.toLowerCase();
+      return c.name.toLowerCase().includes(q) || c.sub.toLowerCase().includes(q);
+    }
+    return true;
+  });
 }
 
-/* ══ RENDER ══ */
-function renderChannels(channels, total) {
+/* ═══ RENDER ═══ */
+function render() {
+  const list = filtered();
+  currentList = list;
   const page = document.getElementById('page');
   page.innerHTML = '';
 
-  if (!channels.length) {
-    page.innerHTML = `<div class="status-msg">Sin canales disponibles</div>`;
+  if (!list.length) {
+    page.innerHTML = '<div class="empty">Sin canales para mostrar</div>';
     return;
   }
 
-  // Agrupar por group-title
+  // Agrupar por categoría
   const groups = {};
-  for (const ch of channels) {
-    const g = ch.group || 'General';
-    if (!groups[g]) groups[g] = [];
-    groups[g].push(ch);
+  for (const ch of list) {
+    const label = catLabel(ch.cat);
+    if (!groups[label]) groups[label] = [];
+    groups[label].push(ch);
   }
 
-  // Info total
-  const info = document.createElement('p');
-  info.style.cssText = 'font-size:.75rem;color:var(--muted);margin-bottom:4px;';
-  info.textContent = `${channels.length} canales disponibles (${total} en la lista)`;
-  page.appendChild(info);
-
-  for (const [group, chs] of Object.entries(groups)) {
-    const section = document.createElement('div');
-
+  for (const [label, chs] of Object.entries(groups)) {
+    const sec = document.createElement('div');
     const title = document.createElement('div');
-    title.className = 'row-title';
-    title.textContent = group;
-    section.appendChild(title);
+    title.className = 'section-title';
+    title.textContent = label;
+    sec.appendChild(title);
 
     const grid = document.createElement('div');
     grid.className = 'ch-grid';
-
-    chs.forEach((ch, i) => {
-      const globalIdx = channels.indexOf(ch);
-      grid.appendChild(buildCard(ch, channels, globalIdx));
-    });
-
-    section.appendChild(grid);
-    page.appendChild(section);
+    chs.forEach(ch => grid.appendChild(buildCard(ch, list)));
+    sec.appendChild(grid);
+    page.appendChild(sec);
   }
 }
 
-function buildCard(ch, list, idx) {
+function catLabel(cat) {
+  return {
+    deportes:'⚽ Deportes', wwe:'🥊 WWE / Lucha', anime:'🎌 Anime',
+    chile:'🇨🇱 Chile', noticias:'📰 Noticias',
+    peliculas:'🎬 Películas', musica:'🎵 Música', infantil:'👶 Infantil',
+  }[cat] || cat;
+}
+
+function buildCard(ch, list) {
   const card = document.createElement('div');
   card.className = 'ch-card';
 
   const thumb = document.createElement('div');
   thumb.className = 'ch-thumb';
-  if (ch.logo) {
-    const img = document.createElement('img');
-    img.src = ch.logo;
-    img.loading = 'lazy';
-    img.onerror = () => { img.style.display='none'; thumb.querySelector('.fallback').style.display='flex'; };
-    thumb.appendChild(img);
-  }
-  const fallback = document.createElement('span');
-  fallback.className = 'fallback';
-  fallback.textContent = '📺';
-  fallback.style.display = ch.logo ? 'none' : 'flex';
-  thumb.appendChild(fallback);
-
-  const badge = document.createElement('span');
-  badge.className = 'ch-live-badge';
-  badge.textContent = 'EN VIVO';
-  thumb.appendChild(badge);
+  thumb.innerHTML = `
+    <span class="ico">${ch.ico}</span>
+    <div class="live-dot"><span class="dot"></span><span>EN VIVO</span></div>
+  `;
 
   const del = document.createElement('button');
   del.className = 'ch-del';
   del.textContent = '✕';
-  del.title = 'Ocultar canal';
+  del.title = 'Ocultar';
   del.onclick = e => { e.stopPropagation(); hideChannel(ch, card); };
   thumb.appendChild(del);
 
   const info = document.createElement('div');
   info.className = 'ch-info';
-  info.innerHTML = `<div class="ch-name">${ch.name}</div><div class="ch-group">${ch.group||''}</div>`;
+  info.innerHTML = `<div class="ch-name">${ch.name}</div><div class="ch-sub">${ch.sub}</div>`;
 
   card.appendChild(thumb);
   card.appendChild(info);
-  card.onclick = () => playChannel(ch, list, idx);
+  card.onclick = () => openPlayer(ch, list, list.indexOf(ch));
   return card;
 }
 
-/* ══ PLAYER ══ */
-function playChannel(ch, list, idx) {
+/* ═══ PLAYER ═══ */
+function openPlayer(ch, list, idx) {
   currentList = list;
   currentIdx  = idx;
 
-  document.getElementById('modalTitle').textContent = ch.name;
-  document.getElementById('modalSub').textContent   = ch.group || 'Canal en vivo';
-  document.getElementById('playerErr').style.display = 'none';
+  document.getElementById('mTitle').textContent = ch.name;
+  document.getElementById('mSub').textContent   = ch.sub || 'Canal en vivo';
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 
+  loadFrame(ch.src);
+
   // Marcar activo
   document.querySelectorAll('.ch-card.playing').forEach(c => c.classList.remove('playing'));
-
-  startStream(ch.url, ch.name);
 }
 
-function startStream(url, name) {
-  const video = document.getElementById('videoEl');
+function loadFrame(src) {
+  const frame   = document.getElementById('pframe');
+  const overlay = document.getElementById('loadingOv');
+  overlay.style.display = 'flex';
+  frame.src = '';
 
-  // Destruir HLS previo
-  if (hlsInst) { hlsInst.destroy(); hlsInst = null; }
+  clearTimeout(loadTimer);
+  loadTimer = setTimeout(() => { overlay.style.display = 'none'; }, 3500);
 
-  const proxyUrl = PROXY + encodeURIComponent(url);
-
-  if (Hls.isSupported()) {
-    hlsInst = new Hls({
-      enableWorker: true,
-      lowLatencyMode: true,
-      maxBufferLength: 30,
-    });
-    hlsInst.loadSource(proxyUrl);
-    hlsInst.attachMedia(video);
-    hlsInst.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(()=>{}));
-    hlsInst.on(Hls.Events.ERROR, (e, data) => {
-      if (data.fatal) showErr();
-    });
-  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = proxyUrl;
-    video.play().catch(showErr);
-  } else {
-    showErr();
-  }
-}
-
-function showErr() {
-  document.getElementById('playerErr').style.display = 'flex';
+  frame.onload = () => { overlay.style.display = 'none'; };
+  frame.src = src;
 }
 
 function closePlayer() {
-  if (hlsInst) { hlsInst.destroy(); hlsInst = null; }
-  const v = document.getElementById('videoEl');
-  v.pause(); v.src = '';
+  clearTimeout(loadTimer);
+  const frame = document.getElementById('pframe');
+  frame.src = '';
   document.getElementById('modal').classList.remove('open');
   document.body.style.overflow = '';
 }
 
-function prevCh() {
+function navCh(dir) {
   if (!currentList.length) return;
-  currentIdx = currentIdx <= 0 ? currentList.length-1 : currentIdx-1;
+  currentIdx = (currentIdx + dir + currentList.length) % currentList.length;
   const ch = currentList[currentIdx];
-  document.getElementById('modalTitle').textContent = ch.name;
-  document.getElementById('playerErr').style.display = 'none';
-  startStream(ch.url, ch.name);
+  document.getElementById('mTitle').textContent = ch.name;
+  document.getElementById('mSub').textContent   = ch.sub;
+  loadFrame(ch.src);
 }
-
-function nextCh() {
-  if (!currentList.length) return;
-  currentIdx = currentIdx >= currentList.length-1 ? 0 : currentIdx+1;
-  const ch = currentList[currentIdx];
-  document.getElementById('modalTitle').textContent = ch.name;
-  document.getElementById('playerErr').style.display = 'none';
-  startStream(ch.url, ch.name);
-}
-
-function tryNext() { nextCh(); }
 
 function goFull() {
-  const box = document.getElementById('playerBox');
-  (box.requestFullscreen || box.webkitRequestFullscreen).call(box);
+  const box = document.getElementById('pbox');
+  (box.requestFullscreen || box.webkitRequestFullscreen || box.mozRequestFullScreen).call(box);
 }
 
-/* ══ OCULTAR CANAL ══ */
+/* ═══ HIDE ═══ */
 function hideChannel(ch, card) {
-  hidden.add(ch.url);
-  localStorage.setItem(HIDDEN, JSON.stringify([...hidden]));
-  card.style.transition = 'opacity .3s, transform .3s';
+  hidden.add(ch.src);
+  localStorage.setItem(HIDDEN_KEY, JSON.stringify([...hidden]));
+  card.style.transition = 'opacity .25s,transform .25s';
   card.style.opacity = '0';
-  card.style.transform = 'scale(.8)';
-  setTimeout(() => card.remove(), 300);
-  showToast('Canal ocultado');
+  card.style.transform = 'scale(.85)';
+  setTimeout(() => { card.remove(); }, 250);
+  toast('Canal ocultado');
 }
 
-/* ══ CATEGORÍAS ══ */
+/* ═══ CATEGORÍAS ═══ */
 document.getElementById('cats').addEventListener('click', e => {
   const btn = e.target.closest('.cat-btn');
   if (!btn) return;
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b===btn));
-  clearTimeout(searchTimer);
-  document.getElementById('searchInput').value = '';
-  loadChannels(btn.dataset.list);
+  activeCat = btn.dataset.cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b === btn));
+  document.getElementById('q').value = '';
+  searchQ = '';
+  render();
 });
 
-/* ══ SEARCH ══ */
-document.getElementById('searchInput').addEventListener('input', e => {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => {
-    const q = e.target.value.trim();
-    if (q.length < 2) return loadChannels(currentCat);
-    loadChannels(currentCat, q);
-  }, 500);
+/* ═══ BÚSQUEDA ═══ */
+let sTimer;
+document.getElementById('q').addEventListener('input', e => {
+  clearTimeout(sTimer);
+  sTimer = setTimeout(() => {
+    searchQ = e.target.value.trim();
+    render();
+  }, 300);
 });
 
-/* ══ PWA ══ */
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(()=>{});
-}
+/* ═══ PWA ═══ */
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
 
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  if (!localStorage.getItem('ib_install_dismissed')) {
-    setTimeout(() => document.getElementById('installBanner').classList.add('show'), 4000);
+  if (!localStorage.getItem('ib_inst_ok')) {
+    setTimeout(() => document.getElementById('instBanner').classList.add('show'), 5000);
   }
 });
 
@@ -514,32 +502,31 @@ function installApp() {
   if (deferredPrompt) {
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then(r => {
-      if (r.outcome==='accepted') showToast('✅ App instalada');
+      if (r.outcome === 'accepted') toast('✅ App instalada');
       deferredPrompt = null;
     });
   } else {
-    showToast('Usa "Añadir a pantalla de inicio" en tu navegador');
+    toast('Usa "Añadir a pantalla de inicio" en tu navegador');
   }
-  dismissInstall();
+  dismissInst();
+}
+function dismissInst() {
+  document.getElementById('instBanner').classList.remove('show');
+  localStorage.setItem('ib_inst_ok','1');
 }
 
-function dismissInstall() {
-  document.getElementById('installBanner').classList.remove('show');
-  localStorage.setItem('ib_install_dismissed', '1');
+/* ═══ TOAST ═══ */
+let tTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(tTimer);
+  tTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-/* ══ TOAST ══ */
-let toastT;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastT);
-  toastT = setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-/* ══ INIT ══ */
-loadChannels('cl');
+/* ═══ INIT ═══ */
+render();
 </script>
 </body>
 </html>
